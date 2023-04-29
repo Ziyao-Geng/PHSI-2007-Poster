@@ -1,7 +1,5 @@
 ---
 title: "PHSI 2007 Report"
-author: 'SID: 520189795'
-date: "2023-04-28"
 output: pdf_document
 ---
 
@@ -9,73 +7,131 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Input the data into R as a data frame
+# Statistical Test for the reaction time data
 ```{r}
-# input data
+# input data and calculate the mean and standard deviation for each dataset
+
+# random visual
 Random_Visual = c(637, 528, 537, 548, 454, 815, 607, 587, 573, 732, 
                 948, 422, 538, 462, 578)
-mean_randv = mean(Random_Visual)
+Random_Visual.mean = mean(Random_Visual)
+Random_Visual.sd = sd(Random_Visual)
 
+# distracted visual
 Distracted_Visual = c(636, 514, 494, 608, 825, 586, 710, 1050, 1090, 1570, 
                     566, 602, 382, 742, 542)
-mean_dv = mean(Distracted_Visual)
-  
+Distracted_Visual.mean = mean(Distracted_Visual)
+Distracted_Visual.sd = sd(Distracted_Visual)
+
+# prompted_visual  
 Prompted_Visual = c(354, 492, 446, 353, 537, 998, 666, 568, 690, 592, 
                   672, 182, 462, 586, 602)
-mean_pv = mean(Prompted_Visual)
-  
+Prompted_Visual.mean = mean(Prompted_Visual)
+Prompted_Visual.sd = sd(Prompted_Visual)
+
+# regular visual
 Regular_Visual = c(399, 450, 185, 248, 367, 676, 692, 580, 564, 508, 
                 218, 212, 202, 202, 282)
-mean_regv = mean(Regular_Visual)
-  
+Regular_Visual.mean = mean(Regular_Visual)
+Regular_Visual.sd = sd(Regular_Visual)
+
+# auditory  
 Auditory = c(213, 115, 110, 128, 139, 482, 174, 324, 236, 146, 
           278, 182, 142, 162, 182)
-mean_aud = mean(Auditory)
+Auditory.mean = mean(Auditory)
+Auditory.sd = sd(Auditory)
 
+# set t.test with alternative as less
+t_test1 <- t.test(Random_Visual, Distracted_Visual, alternative = "less")
+p1 <- round(t_test1$p.value,3)
 
-# generate dataframe based on input data
-mydata <- data.frame(Random_Visual, Distracted_Visual, Auditory)
+# set t.test with alternative as greater
+t_test2 <- t.test(Random_Visual, Prompted_Visual, alternative = "greater")
+p2 <- round(t_test2$p.value,3)
 
+# set t.test with alternative as greater
+t_test3 <- t.test(Random_Visual, Regular_Visual, alternative = "greater")
+p3 <- round(t_test3$p.value,3)
 
-# test for standard and distracted
-anova1 <- aov(Random_Visual ~ Distracted_Visual, data = mydata)
-summary1 <- summary(anova1)
-
-# test for standard and prompted
-anova2 <- aov(Random_Visual ~ Prompted_Visual, data = mydata)
-summary2 <- summary(anova2)
-
-# test for standard and regular
-anova3 <- aov(Random_Visual ~ Regular_Visual, data = mydata)
-summary3 <- summary(anova3)
-
-
-# test for standard and auditory
-anova4 <- aov(Random_Visual ~ Auditory, data = mydata)
-summary4 <- summary(anova4)
+# set t.test with alternative as greater
+t_test4 <- t.test(Random_Visual, Auditory, alternative = "greater")
+p4 <- round(t_test3$p.value,5)
 ```
 
-# P-value for standard and distracted:
+
+## One-tailed T-test for Random Visual and Distracted Visual:
 ```{r, echo=FALSE}
-print(summary1)
+print(t_test1)
 ```
 
-# P-value for standard and prompted:
+## One-tailed T-test for Random Visual and Prompted Visual:
 ```{r, echo=FALSE}
-print(summary2)
+print(t_test2)
 ```
 
-# P-value for standard and regular:
+## One-tailed T-test for Random Visual and Regular Visual:
 ```{r, echo=FALSE}
-print(summary3)
+print(t_test3)
 ```
 
-# P-value for standard and auditory:
+## One-tailed T-test for Random Visual and Auditory:
 ```{r, echo=FALSE}
-print(summary4)
+print(t_test4)
 ```
 
-# T-test:
-```{r}
-t.test(Random_Visual, Distracted_Visual, alternative = "less", conf.level = 0.95)
+# Display Table
+```{r, echo=TRUE}
+# table 1
+test1_table <- data.frame(
+  Column1 = c(15, 15),
+  Column2 = c(Random_Visual.mean, Distracted_Visual.mean),
+  Column3 = c(Random_Visual.sd, Distracted_Visual.sd),
+  Column4 = c(p1, " ")
+)
+
+row.names(test1_table) <- c("Random Visual", "Distracted Visual")
+
+knitr::kable(test1_table, row.names = TRUE, 
+col.names = c("Number of tests","Mean Value (ms)", "Standard Deviation", "P-value"))
+
+# table 2
+test2_table <- data.frame(
+  Column1 = c(15, 15),
+  Column2 = c(Random_Visual.mean, Prompted_Visual.mean),
+  Column3 = c(Random_Visual.sd, Prompted_Visual.sd),
+  Column4 = c(p2, " ")
+)
+
+row.names(test2_table) <- c("Random Visual", "Prompted Visual")
+
+knitr::kable(test2_table, row.names = TRUE, 
+col.names = c("Number of tests","Mean Value (ms)", "Standard Deviation", "P-value"))
+
+# table 3
+test3_table <- data.frame(
+  Column1 = c(15, 15),
+  Column2 = c(Random_Visual.mean, Regular_Visual.mean),
+  Column3 = c(Random_Visual.sd, Regular_Visual.sd),
+  Column4 = c(p3, " ")
+)
+
+row.names(test3_table) <- c("Random Visual", "Regular Visual")
+
+knitr::kable(test3_table, row.names = TRUE, 
+col.names = c("Number of tests","Mean Value (ms)", "Standard Deviation", "P-value"))
+
+# table 4
+test4_table <- data.frame(
+  Column1 = c(15, 15),
+  Column2 = c(Random_Visual.mean, Auditory.mean),
+  Column3 = c(Random_Visual.sd, Auditory.sd),
+  Column4 = c(p4, " ")
+)
+
+row.names(test4_table) <- c("Random Visual", "Auditory")
+
+knitr::kable(test4_table, row.names = TRUE, 
+col.names = c("Number of tests","Mean Value (ms)", "Standard Deviation", "P-value"))
 ```
+
+Hence, the one-tailed t-test indicates that there is a significant difference, with $p \leq 0.05$, between two groups: random visual and regular visual, random visual and auditory.
