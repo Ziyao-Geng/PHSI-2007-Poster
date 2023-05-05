@@ -137,14 +137,13 @@ Hence, the one-tailed t-test indicates that there is a significant difference, w
 # Graphs
 # Graph
 ```{r}
-
-# Load ggplot2 package
+# import ggplot2
 library(ggplot2)
 library(gridExtra)
 
-# Create a data frame with the group data
+# create dataframe
 df1 <- data.frame(
-  Group1 = c("Random Visual", "Regular Visual"),
+  Group1 = c("Random \nVisual", "Regular \nVisual"),
   value1 = c(Random_Visual.mean, Regular_Visual.mean),
   sd1 = c(Random_Visual.sd, Regular_Visual.sd)
 )
@@ -153,23 +152,23 @@ df1 <- data.frame(
 # Create a bar plot with error bars using ggplot2
 plot1 <- ggplot(df1, aes(x = Group1, y = value1, fill = Group1)) +
     geom_bar(stat = "identity", width = 0.4) +
-    geom_errorbar(aes(ymin = value1 - sd1, ymax = value1 + sd1), width = 0.2, color = "black", size = 0.8) +
-    labs(x = "Types of Distraction", y = "Mean Reaction Time (ms)", title = "One-tailed Paired T-test between \nRandom Visual and Regular Visual") +
-    scale_fill_manual(values = c("Random Visual" = "lightblue", "Regular Visual" = "pink")) +
+    geom_errorbar(aes(ymin = value1 - sd1, ymax = value1 + sd1), width = 0.2, color = "black", linewidth = 0.8) +
+    labs(x = "Types of Distraction", y = "Mean Reaction Time (ms)", title = "One-tailed Paired T-test between \nRandom Visual and Regular Visual", fill = "Legend") +
+    scale_fill_manual(values = c("Random \nVisual" = "lightblue", "Regular \nVisual" = "pink")) +
     theme_minimal() +
     theme(
       axis.line = element_line(),
-      plot.title = element_text(hjust = 0.5, size = 8),
+      plot.title = element_text(hjust = 0.5, size = 9),
       axis.title.y = element_text(vjust = 0.5, hjust = 0.5, size = 8),
       axis.title.x = element_text(size = 8),
+      axis.text.x = element_text(size = 8),
       panel.grid = element_blank()
-    )
-
-
+    ) +
+  geom_text(aes(x = 1.5, y = max(df1$value) + 100, label = "    p = 0.00043 \n(p < 0.05)"), size = 2.5)
 
 # plot 2
 df2 <- data.frame(
-  Group_2 = c("Random Visual", "Prompted Visual"),
+  Group2 = c("Random \nVisual", "Prompted \nVisual"),
   value2 = c(Random_Visual.mean, Prompted_Visual.mean),
   sd2 = c(Random_Visual.sd, Prompted_Visual.sd)
 )
@@ -179,22 +178,22 @@ df2 <- data.frame(
 plot2 <- ggplot(df2, aes(x = Group2, y = value2, fill = Group2)) +
   geom_bar(stat = "identity", width = 0.4, position = position_dodge2(reverse = TRUE)) +
   geom_errorbar(aes(ymin = value2 - sd2, ymax = value2 + sd2), width = 0.2, color = "black", size = 0.8, position = position_dodge2(reverse = TRUE)) +
-  labs(x = "Types of Distraction", y = "Mean Reaction Time (ms)", title = "One-tailed Paired T-test between \nRandom Visual and Prompted Visual") +
-  scale_fill_manual(values = c("Random Visual" = "lightblue", "Prompted Visual" = "pink")) +
+  labs(x = "Types of Distraction", y = "Mean Reaction Time (ms)", title = "One-tailed Paired T-test between \nRandom Visual and Prompted Visual", fill = "Legend") +
+  scale_fill_manual(values = c("Random \nVisual" = "lightblue", "Prompted \nVisual" = "pink")) +
   theme_minimal() +
   theme(
       axis.line = element_line(),
-      plot.title = element_text(hjust = 0.5, size = 8),
+      plot.title = element_text(hjust = 0.5, size = 9),
       axis.title.y = element_text(vjust = 0.5, hjust = 0.5, size = 8),
       axis.title.x = element_text(size = 8),
+      axis.text.x = element_text(size = 8),
       panel.grid = element_blank(),
-    )
-
-
+    ) +
+  geom_text(aes(x = 1.5, y = max(df2$value) + 100, label = "  p = 0.10647 \n(p > 0.05)"), size = 2.5)
 
 # plot 3
 df3 <- data.frame(
-  Group3 = c("Random Visual", "Distracted"),
+  Group3 = c("Random \nVisual", "Distracted"),
   value3 = c(Random_Visual.mean, Distracted_Visual.mean),
   sd3 = c(Random_Visual.sd, Distracted_Visual.sd)
 )
@@ -203,25 +202,24 @@ df3 <- data.frame(
 plot3 <- ggplot(df3, aes(x = Group3, y = value3, fill = Group3)) +
   geom_bar(stat = "identity", width = 0.4, position = position_dodge2(reverse = TRUE)) +
   geom_errorbar(aes(ymin = value3 - sd3, ymax = value3 + sd3), width = 0.2, color = "black", size = 0.8, position = position_dodge2(reverse = TRUE)) +
-  labs(x = "Types of Distraction", y = "Mean Reaction Time (ms)", title = "One-tailed Paired T-test between \nRandom Visual and Distracted") +
-  scale_fill_manual(values = c("Random Visual" = "lightblue", "Distracted" = "pink")) +
+  labs(x = "Types of Distraction", y = "Mean Reaction Time (ms)", title = "One-tailed Paired T-test between \nRandom Visual and Distracted", fill = "Legend") +
+  scale_fill_manual(values = c("Random \nVisual" = "lightblue", "Distracted" = "pink")) +
   theme_minimal() +
   theme(
       axis.line = element_line(),
-      plot.title = element_text(hjust = 0.5, size = 8),
+      plot.title = element_text(hjust = 0.5, size = 9),
       axis.title.y = element_text(vjust = 0.5, hjust = 0.5, size = 8),
       axis.title.x = element_text(size = 8),
+      axis.text.x = element_text(size = 8),
       panel.grid = element_blank()
-    )
+    ) +
+  geom_text(aes(x = 1.5, y = max(df3$value) + 145, label = "  p = 0.06794 \n(p > 0.05)"), size = 2.5)
 
 
 
-
-# plot4
-
-# plot 3
+# plot 4
 df4 <- data.frame(
-  Group4 = c("Random Visual", "Auditory"),
+  Group4 = c("Random \nVisual", "Auditory"),
   value4 = c(Random_Visual.mean, Auditory.mean),
   sd4 = c(Random_Visual.sd, Auditory.sd)
 )
@@ -230,16 +228,19 @@ df4 <- data.frame(
 plot4 <- ggplot(df4, aes(x = Group4, y = value4, fill = Group4)) +
   geom_bar(stat = "identity", width = 0.4, position = position_dodge2(reverse = TRUE)) +
   geom_errorbar(aes(ymin = value4 - sd4, ymax = value4 + sd4), width = 0.2, color = "black", size = 0.8, position = position_dodge2(reverse = TRUE)) +
-  labs(x = "Types of Distraction", y = "Mean Reaction Time (ms)", title = "One-tailed Paired T-test between \nRandom Visual and Auditory") +
-  scale_fill_manual(values = c("Random Visual" = "lightblue", "Auditory" = "pink")) +
+  labs(x = "Types of Distraction", y = "Mean Reaction Time (ms)", title = "One-tailed Paired T-test between \nRandom Visual and Auditory", fill = "Legend") +
+  scale_fill_manual(values = c("Random \nVisual" = "lightblue", "Auditory" = "pink")) +
   theme_minimal() +
   theme(
       axis.line = element_line(),
-      plot.title = element_text(hjust = 0.5, size = 8),
+      plot.title = element_text(hjust = 0.5, size = 9),
       axis.title.y = element_text(vjust = 0.5, hjust = 0.5, size = 8),
       axis.title.x = element_text(size = 8),
+      axis.text.x = element_text(size = 8),
       panel.grid = element_blank()
-    )
+    ) +
+  geom_text(aes(x = 1.5, y = max(df4$value) + 100, label = "p = 1e-09 \n (p < 0.05)"), size = 2.5)
 
+grid.arrange(plot1, plot2, plot3, plot4, ncol = 2)
 
 ```
