@@ -55,7 +55,7 @@ p3 <- round(t_test3$p.value,3)
 
 # set t.test with alternative as greater
 t_test4 <- t.test(Random_Visual, Auditory, alternative = "greater")
-p4 <- round(t_test3$p.value,5)
+p4 <- round(t_test4$p.value,5)
 ```
 
 
@@ -135,3 +135,67 @@ col.names = c("Number of tests","Mean Value (ms)", "Standard Deviation", "P-valu
 ```
 
 Hence, the one-tailed t-test indicates that there is a significant difference, with $p \leq 0.05$, between two groups: random visual and regular visual, random visual and auditory.
+
+# Graph
+```{r}
+se_random_visual <- sd(Random_Visual) / sqrt(length(Random_Visual))
+se_regular_visual <- sd(Regular_Visual) / sqrt(length(Regular_Visual))
+
+# Load ggplot2 package
+library(ggplot2)
+
+# Create a data frame with the group data
+df1 <- data.frame(
+  group = c("Random Visual", "Regular Visual"),
+  value = c(Random_Visual.mean, Regular_Visual.mean),
+  sd = c(se_random_visual, se_regular_visual)
+)
+
+# Create a bar plot with error bars using ggplot2
+plot1 <- ggplot(df, aes(x = group, y = value, fill = group)) +
+  geom_bar(stat = "identity", width = 0.4) +
+  geom_errorbar(aes(ymin = value - sd, ymax = value + sd), width = 0.2, color = "black", size = 0.8) +
+  labs(x = "Type of distraction", y = "Mean Value", title = "Bar Plot with Error Bars") +
+  scale_fill_manual(values = c("Random Visual" = "red", "Regular Visual" = "blue")) +
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(hjust = 0.5),
+    axis.title.y = element_text(vjust = 0.5, hjust = 0.5)
+  ) +
+  geom_text(aes(x = 1.5, y = max(df$value) + 0.1, label = "p = 0.001"), size = 4)
+
+se_random_visual <- sd(Random_Visual) / sqrt(length(Random_Visual))
+se_regular_visual <- sd(Regular_Visual) / sqrt(length(Regular_Visual))
+
+plot1_means <- c(Random_Visual.mean, Regular_Visual.mean)
+plot1_se <- c(se_random_visual, se_regular_visual)
+
+# Load ggplot2 package
+library(ggplot2)
+
+# Create a data frame with the group data
+df1 <- data.frame(
+  group = c("Random Visual", "Regular Visual"),
+  value = c(Random_Visual.mean, Regular_Visual.mean),
+  sd = c(se_random_visual, se_regular_visual)
+)
+
+# Create a bar plot with error bars using ggplot2
+ggplot(df, aes(x = group, y = value, fill = group)) +
+  geom_bar(stat = "identity", width = 0.4) +
+  geom_errorbar(aes(ymin = value - sd, ymax = value + sd), width = 0.2, color = "black", size = 0.8) +
+  labs(x = "Type of distraction", y = "Mean Value", title = "Bar Plot with Error Bars") +
+  scale_fill_manual(values = c("Random Visual" = "red", "Regular Visual" = "blue")) +
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(hjust = 0.5),
+    axis.title.y = element_text(vjust = 0.5, hjust = 0.5)
+  ) +
+  geom_text(aes(x = 1.5, y = max(value) + 0.1, label = "p = 0.001"), size = 4)
+```
+
+
