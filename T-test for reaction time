@@ -12,8 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # input data and calculate the mean and standard deviation for each dataset
 
 # random visual
-Random_Visual = c(637, 528, 537, 548, 454, 815, 607, 587, 573, 732, 
-                948, 422, 538, 462, 578)
+Random_Visual = c(637, 528, 537, 548, 454, 815, 607, 587, 573, 732, 948, 422, 538, 462, 578)
 Random_Visual.mean = mean(Random_Visual)
 Random_Visual.sd = sd(Random_Visual)
 
@@ -30,8 +29,7 @@ Prompted_Visual.mean = mean(Prompted_Visual)
 Prompted_Visual.sd = sd(Prompted_Visual)
 
 # regular visual
-Regular_Visual = c(399, 450, 185, 248, 367, 676, 692, 580, 564, 508, 
-                218, 212, 202, 202, 282)
+Regular_Visual = c(399, 450, 185, 248, 367, 676, 692, 580, 564, 508, 218, 212, 202, 202, 282)
 Regular_Visual.mean = mean(Regular_Visual)
 Regular_Visual.sd = sd(Regular_Visual)
 
@@ -42,39 +40,39 @@ Auditory.mean = mean(Auditory)
 Auditory.sd = sd(Auditory)
 
 # set t.test with alternative as less
-t_test1 <- t.test(Random_Visual, Distracted_Visual, alternative = "less")
-p1 <- round(t_test1$p.value,3)
+t_test1 <- t.test(Random_Visual, Distracted_Visual, alternative = "less", paired = TRUE)
+p1 <- round(t_test1$p.value,5)
 
 # set t.test with alternative as greater
-t_test2 <- t.test(Random_Visual, Prompted_Visual, alternative = "greater")
-p2 <- round(t_test2$p.value,3)
+t_test2 <- t.test(Random_Visual, Prompted_Visual, alternative = "greater", paired = TRUE)
+p2 <- round(t_test2$p.value,5)
 
 # set t.test with alternative as greater
-t_test3 <- t.test(Random_Visual, Regular_Visual, alternative = "greater")
-p3 <- round(t_test3$p.value,3)
+t_test3 <- t.test(Random_Visual, Regular_Visual, alternative = "greater", paired = TRUE)
+p3 <- round(t_test3$p.value,5)
 
 # set t.test with alternative as greater
-t_test4 <- t.test(Random_Visual, Auditory, alternative = "greater")
-p4 <- round(t_test4$p.value,5)
+t_test4 <- t.test(Random_Visual, Auditory, alternative = "greater", paired = TRUE)
+p4 <- round(t_test4$p.value,10)
 ```
 
 
-## One-tailed T-test for Random Visual and Distracted Visual:
+## One-tailed Paired T-test for Random Visual and Distracted Visual:
 ```{r, echo=FALSE}
 print(t_test1)
 ```
 
-## One-tailed T-test for Random Visual and Prompted Visual:
+## One-tailed Paired T-test for Random Visual and Prompted Visual:
 ```{r, echo=FALSE}
 print(t_test2)
 ```
 
-## One-tailed T-test for Random Visual and Regular Visual:
+## One-tailed Paired T-test for Random Visual and Regular Visual:
 ```{r, echo=FALSE}
 print(t_test3)
 ```
 
-## One-tailed T-test for Random Visual and Auditory:
+## One-tailed Paired T-test for Random Visual and Auditory:
 ```{r, echo=FALSE}
 print(t_test4)
 ```
@@ -136,66 +134,112 @@ col.names = c("Number of tests","Mean Value (ms)", "Standard Deviation", "P-valu
 
 Hence, the one-tailed t-test indicates that there is a significant difference, with $p \leq 0.05$, between two groups: random visual and regular visual, random visual and auditory.
 
+# Graphs
 # Graph
 ```{r}
-se_random_visual <- sd(Random_Visual) / sqrt(length(Random_Visual))
-se_regular_visual <- sd(Regular_Visual) / sqrt(length(Regular_Visual))
 
 # Load ggplot2 package
 library(ggplot2)
+library(gridExtra)
 
 # Create a data frame with the group data
 df1 <- data.frame(
-  group = c("Random Visual", "Regular Visual"),
-  value = c(Random_Visual.mean, Regular_Visual.mean),
-  sd = c(se_random_visual, se_regular_visual)
+  Group1 = c("Random Visual", "Regular Visual"),
+  value1 = c(Random_Visual.mean, Regular_Visual.mean),
+  sd1 = c(Random_Visual.sd, Regular_Visual.sd)
+)
+
+# plot 1
+# Create a bar plot with error bars using ggplot2
+plot1 <- ggplot(df1, aes(x = Group1, y = value1, fill = Group1)) +
+    geom_bar(stat = "identity", width = 0.4) +
+    geom_errorbar(aes(ymin = value1 - sd1, ymax = value1 + sd1), width = 0.2, color = "black", size = 0.8) +
+    labs(x = "Types of Distraction", y = "Mean Reaction Time (ms)", title = "One-tailed Paired T-test between \nRandom Visual and Regular Visual") +
+    scale_fill_manual(values = c("Random Visual" = "lightblue", "Regular Visual" = "pink")) +
+    theme_minimal() +
+    theme(
+      axis.line = element_line(),
+      plot.title = element_text(hjust = 0.5, size = 8),
+      axis.title.y = element_text(vjust = 0.5, hjust = 0.5, size = 8),
+      axis.title.x = element_text(size = 8),
+      panel.grid = element_blank()
+    )
+
+
+
+# plot 2
+df2 <- data.frame(
+  Group_2 = c("Random Visual", "Prompted Visual"),
+  value2 = c(Random_Visual.mean, Prompted_Visual.mean),
+  sd2 = c(Random_Visual.sd, Prompted_Visual.sd)
+)
+
+
+# Create a bar plot with error bars using ggplot2
+plot2 <- ggplot(df2, aes(x = Group2, y = value2, fill = Group2)) +
+  geom_bar(stat = "identity", width = 0.4, position = position_dodge2(reverse = TRUE)) +
+  geom_errorbar(aes(ymin = value2 - sd2, ymax = value2 + sd2), width = 0.2, color = "black", size = 0.8, position = position_dodge2(reverse = TRUE)) +
+  labs(x = "Types of Distraction", y = "Mean Reaction Time (ms)", title = "One-tailed Paired T-test between \nRandom Visual and Prompted Visual") +
+  scale_fill_manual(values = c("Random Visual" = "lightblue", "Prompted Visual" = "pink")) +
+  theme_minimal() +
+  theme(
+      axis.line = element_line(),
+      plot.title = element_text(hjust = 0.5, size = 8),
+      axis.title.y = element_text(vjust = 0.5, hjust = 0.5, size = 8),
+      axis.title.x = element_text(size = 8),
+      panel.grid = element_blank(),
+    )
+
+
+
+# plot 3
+df3 <- data.frame(
+  Group3 = c("Random Visual", "Distracted"),
+  value3 = c(Random_Visual.mean, Distracted_Visual.mean),
+  sd3 = c(Random_Visual.sd, Distracted_Visual.sd)
 )
 
 # Create a bar plot with error bars using ggplot2
-plot1 <- ggplot(df, aes(x = group, y = value, fill = group)) +
-  geom_bar(stat = "identity", width = 0.4) +
-  geom_errorbar(aes(ymin = value - sd, ymax = value + sd), width = 0.2, color = "black", size = 0.8) +
-  labs(x = "Type of distraction", y = "Mean Value", title = "Bar Plot with Error Bars") +
-  scale_fill_manual(values = c("Random Visual" = "red", "Regular Visual" = "blue")) +
+plot3 <- ggplot(df3, aes(x = Group3, y = value3, fill = Group3)) +
+  geom_bar(stat = "identity", width = 0.4, position = position_dodge2(reverse = TRUE)) +
+  geom_errorbar(aes(ymin = value3 - sd3, ymax = value3 + sd3), width = 0.2, color = "black", size = 0.8, position = position_dodge2(reverse = TRUE)) +
+  labs(x = "Types of Distraction", y = "Mean Reaction Time (ms)", title = "One-tailed Paired T-test between \nRandom Visual and Distracted") +
+  scale_fill_manual(values = c("Random Visual" = "lightblue", "Distracted" = "pink")) +
   theme_minimal() +
   theme(
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    plot.title = element_text(hjust = 0.5),
-    axis.title.y = element_text(vjust = 0.5, hjust = 0.5)
-  ) +
-  geom_text(aes(x = 1.5, y = max(df$value) + 0.1, label = "p = 0.001"), size = 4)
+      axis.line = element_line(),
+      plot.title = element_text(hjust = 0.5, size = 8),
+      axis.title.y = element_text(vjust = 0.5, hjust = 0.5, size = 8),
+      axis.title.x = element_text(size = 8),
+      panel.grid = element_blank()
+    )
 
-se_random_visual <- sd(Random_Visual) / sqrt(length(Random_Visual))
-se_regular_visual <- sd(Regular_Visual) / sqrt(length(Regular_Visual))
 
-plot1_means <- c(Random_Visual.mean, Regular_Visual.mean)
-plot1_se <- c(se_random_visual, se_regular_visual)
 
-# Load ggplot2 package
-library(ggplot2)
 
-# Create a data frame with the group data
-df1 <- data.frame(
-  group = c("Random Visual", "Regular Visual"),
-  value = c(Random_Visual.mean, Regular_Visual.mean),
-  sd = c(se_random_visual, se_regular_visual)
+# plot4
+
+# plot 3
+df4 <- data.frame(
+  Group4 = c("Random Visual", "Auditory"),
+  value4 = c(Random_Visual.mean, Auditory.mean),
+  sd4 = c(Random_Visual.sd, Auditory.sd)
 )
 
 # Create a bar plot with error bars using ggplot2
-ggplot(df, aes(x = group, y = value, fill = group)) +
-  geom_bar(stat = "identity", width = 0.4) +
-  geom_errorbar(aes(ymin = value - sd, ymax = value + sd), width = 0.2, color = "black", size = 0.8) +
-  labs(x = "Type of distraction", y = "Mean Value", title = "Bar Plot with Error Bars") +
-  scale_fill_manual(values = c("Random Visual" = "red", "Regular Visual" = "blue")) +
+plot4 <- ggplot(df4, aes(x = Group4, y = value4, fill = Group4)) +
+  geom_bar(stat = "identity", width = 0.4, position = position_dodge2(reverse = TRUE)) +
+  geom_errorbar(aes(ymin = value4 - sd4, ymax = value4 + sd4), width = 0.2, color = "black", size = 0.8, position = position_dodge2(reverse = TRUE)) +
+  labs(x = "Types of Distraction", y = "Mean Reaction Time (ms)", title = "One-tailed Paired T-test between \nRandom Visual and Auditory") +
+  scale_fill_manual(values = c("Random Visual" = "lightblue", "Auditory" = "pink")) +
   theme_minimal() +
   theme(
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    plot.title = element_text(hjust = 0.5),
-    axis.title.y = element_text(vjust = 0.5, hjust = 0.5)
-  ) +
-  geom_text(aes(x = 1.5, y = max(value) + 0.1, label = "p = 0.001"), size = 4)
+      axis.line = element_line(),
+      plot.title = element_text(hjust = 0.5, size = 8),
+      axis.title.y = element_text(vjust = 0.5, hjust = 0.5, size = 8),
+      axis.title.x = element_text(size = 8),
+      panel.grid = element_blank()
+    )
+
+
 ```
-
-
