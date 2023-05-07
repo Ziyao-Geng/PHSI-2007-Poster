@@ -56,6 +56,20 @@ t_test4 <- t.test(Random_Visual, Auditory, alternative = "greater", paired = TRU
 p4 <- round(t_test4$p.value,10)
 ```
 
+# Data summary
+```{r}
+summary_table <- data.frame(
+  Column1 = c(round(Random_Visual.mean, digits = 2), round(Distracted_Visual.mean, digits = 2), round(Prompted_Visual.mean, digits = 2), round(Regular_Visual.mean, digits = 2), round(Auditory.mean, digits = 2)),
+  Column2 = c(round(Random_Visual.sd, digits = 2), round(Distracted_Visual.sd, digits = 2), round(Prompted_Visual.sd, digits = 2), round(Regular_Visual.sd, digits = 2), round(Auditory.sd, digits = 2))
+)
+
+row.names(summary_table) <- c("Reaction times to random visual cues \n---------------------------------------------", "Reaction times when distracted by performing arithmetic task \n---------------------------------------------", "Reaction times with a sound prompt of “ready” before a visual cue \n---------------------------------------------", "Reaction times by regular visual cues through regular rhythm \n---------------------------------------------", "Auditory cue of tapping the bench \n---------------------------------------------")
+
+knitr::kable(summary_table, row.names = TRUE, 
+col.names = c("Mean (ms)", "SD  (ms)"))
+```
+
+
 
 ## One-tailed Paired T-test for Random Visual and Distracted Visual:
 ```{r, echo=FALSE}
